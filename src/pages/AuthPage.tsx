@@ -33,17 +33,21 @@ const AuthPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background p-4">
-      <div className="w-full max-w-md space-y-4">
-        <div className="flex items-center justify-center gap-4">
-          <img src={logo} alt="Kinder BH" className="h-20 w-20 sm:h-24 sm:w-24 object-contain" />
-          <div>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-sky-100 via-background to-pink-100 dark:from-sky-950 dark:via-background dark:to-pink-950 p-4">
+      <div className="w-full max-w-md space-y-6">
+        <div className="flex flex-col items-center justify-center gap-3 animate-fade-in">
+          <img
+            src={logo}
+            alt="Kinder BH"
+            className="h-32 w-32 sm:h-40 sm:w-40 object-contain drop-shadow-xl animate-scale-in"
+          />
+          <div className="text-center">
             <h1 className="text-2xl sm:text-3xl font-bold">Kinder BH</h1>
             <p className="text-muted-foreground text-sm">{t("auth.subtitle")}</p>
           </div>
         </div>
 
-        <Card>
+        <Card className="shadow-xl border-0 ring-1 ring-border/50 animate-slide-in">
           <CardHeader className="pb-4">
             <div className="flex items-center justify-between">
               <CardTitle className="text-lg">{t("auth.login")}</CardTitle>
@@ -52,7 +56,7 @@ const AuthPage = () => {
               </Button>
             </div>
           </CardHeader>
-          <CardContent>
+          <CardContent className="px-6 pb-6">
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
                 <Label>{t("auth.email")}</Label>
