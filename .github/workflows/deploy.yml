@@ -28,5 +28,5 @@ jobs:
       - name: Build project
         run: npm run build
 
-      - name: Deploy to rawdat.lovable.app
-        run: echo "Build complete – deployment to https://rawdat.lovable.app is handled by Lovable on push to main."
+      - name: Build verification complete
+        run: echo "Build succeeded – Lovable will deploy to https://rawdat.lovable.app automatically on push to main."
