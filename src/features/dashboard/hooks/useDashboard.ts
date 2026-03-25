@@ -57,5 +57,6 @@ export function useDashboard() {
   return {
     ...data,
     isLoading: studentsQuery.isLoading || assessmentsQuery.isLoading,
+    error: studentsQuery.error || assessmentsQuery.error,
   };
 }
