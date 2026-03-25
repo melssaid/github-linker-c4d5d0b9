@@ -125,8 +125,13 @@ function CircularScore({ score, size = 80 }: { score: number; size?: number }) {
       <svg className="rotate-[-90deg]" width={size} height={size}>
         <circle cx={size / 2} cy={size / 2} r={radius} fill="none" className="stroke-muted/30" strokeWidth={4} />
         <motion.circle
-          cx={size / 2} cy={size / 2} r={radius} fill="none"
-          className={color} strokeWidth={4} strokeLinecap="round"
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          fill="none"
+          className={color}
+          strokeWidth={4}
+          strokeLinecap="round"
           strokeDasharray={circumference}
           initial={{ strokeDashoffset: circumference }}
           animate={{ strokeDashoffset }}
@@ -144,56 +149,64 @@ function DailyCheckIn({ isAr, studentName }: { isAr: boolean; studentName: strin
   const [focus, setFocus] = useState<number | null>(null);
   const [interaction, setInteraction] = useState<number | null>(null);
   const [saved, setSaved] = useState(false);
+  const [savedAt, setSavedAt] = useState<string | null>(null);
 
-  const moodEmojis = [
-    { emoji: "😢", label: isAr ? "حزين" : "Sad" },
-    { emoji: "😐", label: isAr ? "عادي" : "Neutral" },
-    { emoji: "🙂", label: isAr ? "جيد" : "Good" },
-    { emoji: "😄", label: isAr ? "سعيد" : "Happy" },
-    { emoji: "🤩", label: isAr ? "ممتاز" : "Amazing" },
-  ];
+  const moodEmojis = {
+    0: { emoji: "😢", label: isAr ? "حزين" : "Sad" },
+    1: { emoji: "😐", label: isAr ? "عادي" : "Neutral" },
+    2: { emoji: "🙂", label: isAr ? "جيد" : "Good" },
+    3: { emoji: "😄", label: isAr ? "سعيد" : "Happy" },
+    4: { emoji: "🤩", label: isAr ? "ممتاز" : "Amazing" },
+  } as const;
 
-  const focusEmojis = [
-    { emoji: "😵‍💫", label: isAr ? "مشتت" : "Distracted" },
-    { emoji: "🤔", label: isAr ? "ضعيف" : "Low" },
-    { emoji: "🧐", label: isAr ? "متوسط" : "Medium" },
-    { emoji: "🎯", label: isAr ? "جيد" : "Good" },
-    { emoji: "🔥", label: isAr ? "عالي جداً" : "Laser Focus" },
-  ];
+  const focusEmojis = {
+    0: { emoji: "😵‍💫", label: isAr ? "مشتت" : "Distracted" },
+    1: { emoji: "🤔", label: isAr ? "ضعيف" : "Low" },
+    2: { emoji: "🧐", label: isAr ? "متوسط" : "Medium" },
+    3: { emoji: "🎯", label: isAr ? "جيد" : "Good" },
+    4: { emoji: "🔥", label: isAr ? "عالي جداً" : "Laser Focus" },
+  } as const;
 
-  const interactionEmojis = [
-    { emoji: "🫥", label: isAr ? "منعزل" : "Isolated" },
-    { emoji: "😶", label: isAr ? "خجول" : "Shy" },
-    { emoji: "🙋", label: isAr ? "متفاعل" : "Active" },
-    { emoji: "🤝", label: isAr ? "تعاوني" : "Cooperative" },
-    { emoji: "🌟", label: isAr ? "قيادي" : "Leader" },
-  ];
+  const interactionEmojis = {
+    0: { emoji: "🫥", label: isAr ? "منعزل" : "Isolated" },
+    1: { emoji: "😶", label: isAr ? "خجول" : "Shy" },
+    2: { emoji: "🙋", label: isAr ? "متفاعل" : "Active" },
+    3: { emoji: "🤝", label: isAr ? "تعاوني" : "Cooperative" },
+    4: { emoji: "🌟", label: isAr ? "قيادي" : "Leader" },
+  } as const;
 
   const handleSave = () => {
+    if (mood === null || focus === null || interaction === null) return;
     setSaved(true);
+    setSavedAt(new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }));
     toast.success(isAr ? `تم حفظ تقييم ${studentName} اليومي ✅` : `Daily check-in saved for ${studentName} ✅`);
   };
 
   const renderScale = (
-    items: { emoji: string; label: string }[],
-    value: number | null,
-    setValue: (v: number) => void
+    scale: Record<number, { emoji: string; label: string }>,
+    selected: number | null,
+    setSelected: (v: number) => void
   ) => (
-    <div className="flex gap-1 justify-center">
-      {items.map((item, i) => (
-        <button
-          key={i}
-          onClick={() => setValue(i)}
-          className={`flex flex-col items-center gap-0.5 p-1.5 rounded-xl transition-all duration-200 min-w-[48px] ${
-            value === i
-              ? "bg-primary/15 scale-110 shadow-md ring-2 ring-primary/30"
-              : "hover:bg-muted/50 hover:scale-105"
-          }`}
-        >
-          <span className="text-xl">{item.emoji}</span>
-          <span className="text-[9px] text-muted-foreground font-medium">{item.label}</span>
-        </button>
-      ))}
+    <div className="flex gap-2">
+      {Object.entries(scale).map(([key, { emoji, label }]) => {
+        const k = Number(key);
+        const active = selected === k;
+        return (
+          <button
+            key={k}
+            onClick={() => setSelected(k)}
+            aria-label={`${label} ${emoji}`}
+            className={`flex-1 rounded-lg border px-3 py-2 text-xs transition-all ${
+              active
+                ? "border-primary bg-primary/10 text-primary shadow-sm"
+                : "border-border hover:border-primary/50"
+            }`}
+          >
+            <div className="text-lg leading-none">{emoji}</div>
+            <div className="mt-1">{label}</div>
+          </button>
+        );
+      })}
     </div>
   );
 
@@ -205,17 +218,23 @@ function DailyCheckIn({ isAr, studentName }: { isAr: boolean; studentName: strin
             <span className="text-5xl">✅</span>
             <h3 className="font-bold text-lg">{isAr ? "تم التسجيل!" : "Check-in Saved!"}</h3>
             <p className="text-sm text-muted-foreground">
-              {isAr ? `المزاج: ${moodEmojis[mood!]?.emoji} | التركيز: ${focusEmojis[focus!]?.emoji} | التفاعل: ${interactionEmojis[interaction!]?.emoji}` :
-                `Mood: ${moodEmojis[mood!]?.emoji} | Focus: ${focusEmojis[focus!]?.emoji} | Interaction: ${interactionEmojis[interaction!]?.emoji}`}
+              {isAr
+                ? `المزاج: ${moodEmojis[mood!]?.emoji} | التركيز: ${focusEmojis[focus!]?.emoji} | التفاعل: ${interactionEmojis[interaction!]?.emoji}`
+                : `Mood: ${moodEmojis[mood!]?.emoji} | Focus: ${focusEmojis[focus!]?.emoji} | Interaction: ${interactionEmojis[interaction!]?.emoji}`}
             </p>
-            <Button variant="ghost" size="sm" onClick={() => setSaved(false)} className="text-xs">
-              {isAr ? "تعديل" : "Edit"}
-            </Button>
+            {savedAt && (
+              <p className="text-[11px] text-muted-foreground">
+                {isAr ? `آخر حفظ: ${savedAt}` : `Last saved: ${savedAt}`} 
+              </p>
+            )}
+            <Button variant="ghost" size="sm" onClick={() => setSaved(false)} className="text-xs">{isAr ? "تعديل" : "Edit"}</Button>
           </CardContent>
         </Card>
       </motion.div>
     );
   }
+
+  const disableSave = mood === null || focus === null || interaction === null;
 
   return (
     <Card className="border-0 shadow-xl bg-gradient-to-br from-amber-500/10 via-background to-rose-500/5 overflow-hidden">
@@ -225,6 +244,9 @@ function DailyCheckIn({ isAr, studentName }: { isAr: boolean; studentName: strin
             <Sparkles className="h-4 w-4 text-amber-500" />
           </div>
           {isAr ? "📝 التقييم اليومي السريع" : "📝 Daily Quick Check-in"}
+          <span className="ms-auto text-[11px] px-2 py-1 rounded-full bg-white/60 text-muted-foreground">
+            {new Date().toLocaleDateString(isAr ? "ar" : "en", { month: "short", day: "numeric" })}
+          </span>
         </CardTitle>
         <CardDescription className="text-xs">
           {isAr ? "سجّلي ملاحظاتك اليومية بنقرة واحدة" : "Log daily observations with one tap"}
@@ -243,15 +265,31 @@ function DailyCheckIn({ isAr, studentName }: { isAr: boolean; studentName: strin
           <p className="text-xs font-semibold mb-2 text-muted-foreground">{isAr ? "👫 التفاعل" : "👫 Interaction"}</p>
           {renderScale(interactionEmojis, interaction, setInteraction)}
         </div>
-        <Button
-          onClick={handleSave}
-          disabled={mood === null || focus === null || interaction === null}
-          className="w-full rounded-full gap-2 shadow-md"
-          size="sm"
-        >
-          <Sparkles className="h-4 w-4" />
-          {isAr ? "حفظ التقييم اليومي" : "Save Daily Check-in"}
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            onClick={handleSave}
+            disabled={disableSave}
+            className="w-full rounded-full gap-2 shadow-md"
+            size="sm"
+          >
+            <Sparkles className="h-4 w-4" />
+            {disableSave
+              ? isAr ? "اختر كل الحقول" : "Select all fields"
+              : isAr ? "حفظ التقييم" : "Save check-in"}
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => {
+              setMood(null);
+              setFocus(null);
+              setInteraction(null);
+            }}
+            className="rounded-full text-xs"
+          >
+            {isAr ? "إعادة تعيين" : "Reset"}
+          </Button>
+        </div>
       </CardContent>
     </Card>
   );
@@ -394,7 +432,7 @@ export function StudentProfileView({ student, onBack }: StudentProfileViewProps)
                         analysis.indicators.type === "gifted" ? "bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300"
                           : analysis.indicators.type === "delayed" ? "bg-rose-100 text-rose-800 dark:bg-rose-900/40 dark:text-rose-300"
                           : "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300"
-                      }`}>
+                      }`}> 
                         {analysis.indicators.type === "gifted" ? "🌟 " : analysis.indicators.type === "delayed" ? "⚠️ " : "✅ "}
                         {isAr ? (analysis.indicators.type === "gifted" ? "موهوب" : analysis.indicators.type === "delayed" ? "يحتاج دعم" : "طبيعي") : analysis.indicators.type}
                       </Badge>
@@ -403,7 +441,7 @@ export function StudentProfileView({ student, onBack }: StudentProfileViewProps)
                 </div>
               </div>
               <div className="flex flex-col gap-2">
-                <Button size="sm" className="gap-2 rounded-full shadow-md" onClick={() => navigate("/survey")}>
+                <Button size="sm" className="gap-2 rounded-full shadow-md" onClick={() => navigate("/survey")}> 
                   <PlayCircle className="h-4 w-4" />
                   {isAr ? "تقييم جديد" : "New Assessment"}
                 </Button>
@@ -462,7 +500,7 @@ export function StudentProfileView({ student, onBack }: StudentProfileViewProps)
           { icon: <Brain className="h-5 w-5" />, value: surveys.filter(s => s.analysis).length, suffix: "", label: isAr ? "تحليلات AI" : "AI Analyses", color: "from-purple-500/20 to-purple-500/5", iconColor: "text-purple-500" },
         ].map((stat, idx) => (
           <motion.div key={idx} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 * idx }}>
-            <Card className={`border-0 shadow-md bg-gradient-to-br ${stat.color} hover:shadow-lg transition-shadow`}>
+            <Card className={`border-0 shadow-md bg-gradient-to-br ${stat.color} hover:shadow-lg transition-shadow`}> 
               <CardContent className="pt-4 pb-3 text-center">
                 <div className={`mx-auto mb-2 ${stat.iconColor}`}>{stat.icon}</div>
                 <p className="text-3xl font-extrabold tracking-tight">{stat.value}{stat.suffix}</p>
@@ -486,9 +524,7 @@ export function StudentProfileView({ student, onBack }: StudentProfileViewProps)
                     <p className="text-sm text-muted-foreground mt-1">
                       {isAr ? `بناءً على ${categoryScores.filter(c => c.score > 0).length} بنود تقييم` : `Based on ${categoryScores.filter(c => c.score > 0).length} assessment categories`}
                     </p>
-                    <Badge className={`mt-2 ${getScoreLevel(overallScore, isAr).bg} border-0`}>
-                      {getScoreLevel(overallScore, isAr).label}
-                    </Badge>
+                    <Badge className={`mt-2 ${getScoreLevel(overallScore, isAr).bg} border-0`}>{getScoreLevel(overallScore, isAr).label}</Badge>
                   </div>
                 </div>
               </div>
@@ -619,8 +655,8 @@ export function StudentProfileView({ student, onBack }: StudentProfileViewProps)
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <ResponsiveContainer width="100%" height={300}>
-                      <AreaChart data={surveyTimeline}>
+                    <ResponsiveContainer width="100%" height={300}> 
+                      <AreaChart data={surveyTimeline}> 
                         <defs><linearGradient id="scoreGradient" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor="hsl(258, 58%, 58%)" stopOpacity={0.3} /><stop offset="95%" stopColor="hsl(258, 58%, 58%)" stopOpacity={0} /></linearGradient></defs>
                         <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                         <XAxis dataKey="date" tick={{ fontSize: 10 }} /><YAxis domain={[0, 100]} tick={{ fontSize: 10 }} />
@@ -638,13 +674,13 @@ export function StudentProfileView({ student, onBack }: StudentProfileViewProps)
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
               <Card className="border-0 shadow-lg">
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-base flex items-center gap-2">
+                  <CardTitle className="text-base flex items-center gap-2"> 
                     <div className="p-1.5 rounded-lg bg-amber-500/10"><Award className="h-4 w-4 text-amber-500" /></div>
                     {isAr ? "مقارنة درجات جميع البنود" : "All Category Scores Comparison"}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <ResponsiveContainer width="100%" height={320}>
+                  <ResponsiveContainer width="100%" height={320}> 
                     <BarChart data={categoryScores.filter(c => c.score > 0)} layout="vertical">
                       <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                       <XAxis type="number" domain={[0, 100]} tick={{ fontSize: 10 }} />
@@ -664,7 +700,7 @@ export function StudentProfileView({ student, onBack }: StudentProfileViewProps)
         {/* Analysis Tab */}
         <TabsContent value="analysis" className="space-y-4">
           {analysis ? (
-            <>
+            <> 
               {analysis.summary && (
                 <Card className="border-0 shadow-lg bg-gradient-to-br from-primary/5 to-transparent">
                   <CardHeader className="pb-2">
@@ -684,7 +720,7 @@ export function StudentProfileView({ student, onBack }: StudentProfileViewProps)
                   analysis.indicators.type === "gifted" ? "bg-gradient-to-br from-amber-500/10 to-amber-500/5"
                     : analysis.indicators.type === "delayed" ? "bg-gradient-to-br from-rose-500/10 to-rose-500/5"
                     : "bg-gradient-to-br from-emerald-500/10 to-emerald-500/5"
-                }`}>
+                }`}> 
                   <CardContent className="p-5 flex items-start gap-4">
                     <div className="text-4xl">{analysis.indicators.type === "gifted" ? "🌟" : analysis.indicators.type === "delayed" ? "⚠️" : "✅"}</div>
                     <div>
@@ -735,7 +771,7 @@ export function StudentProfileView({ student, onBack }: StudentProfileViewProps)
               {analysis.recommendations && (
                 <Card className="border-0 shadow-lg bg-gradient-to-br from-blue-500/10 to-blue-500/5">
                   <CardHeader className="pb-2">
-                    <CardTitle className="text-base flex items-center gap-2">
+                    <CardTitle className="text-base flex items-center gap-2"> 
                       <div className="p-1.5 rounded-lg bg-blue-500/15"><BookOpen className="h-4 w-4 text-blue-500" /></div>
                       {isAr ? "📝 توصيات المعلمة" : "📝 Teacher Recommendations"}
                     </CardTitle>
@@ -806,7 +842,7 @@ export function StudentProfileView({ student, onBack }: StudentProfileViewProps)
                   <ResponsiveContainer width="100%" height={240}>
                     <PieChart>
                       <Pie data={attendancePieData} cx="50%" cy="50%" innerRadius={55} outerRadius={85} paddingAngle={4} dataKey="value"
-                        label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}>
+                        label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}> 
                         {attendancePieData.map((entry, i) => (<Cell key={i} fill={entry.color} />))}
                       </Pie>
                       <Tooltip />
@@ -821,7 +857,7 @@ export function StudentProfileView({ student, onBack }: StudentProfileViewProps)
         {/* Parent Message Tab (NEW) */}
         <TabsContent value="parent" className="space-y-4">
           {analysis?.parentMessage ? (
-            <>
+            <> 
               <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }}>
                 <Card className="border-0 shadow-xl bg-gradient-to-br from-rose-500/10 via-pink-500/5 to-transparent overflow-hidden">
                   <CardHeader className="pb-2">
@@ -859,7 +895,7 @@ export function StudentProfileView({ student, onBack }: StudentProfileViewProps)
                 <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
                   <Card className="border-0 shadow-lg bg-gradient-to-br from-purple-500/10 to-purple-500/5">
                     <CardHeader className="pb-2">
-                      <CardTitle className="text-base flex items-center gap-2">
+                      <CardTitle className="text-base flex items-center gap-2"> 
                         <div className="p-1.5 rounded-lg bg-purple-500/15"><ClipboardList className="h-4 w-4 text-purple-500" /></div>
                         {isAr ? "📅 خطة العمل المنزلية" : "📅 Home Action Plan"}
                       </CardTitle>
@@ -916,7 +952,7 @@ export function StudentProfileView({ student, onBack }: StudentProfileViewProps)
                     {s.analysis && (
                       <Badge className={`text-xs rounded-full ${
                         (s.analysis as any)?.indicators?.type === "gifted" ? "bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300" : "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300"
-                      }`}>
+                      }`}> 
                         {(s.analysis as any)?.indicators?.type === "gifted" ? "🌟 " : "✅ "}
                         {isAr ? ((s.analysis as any)?.indicators?.type === "gifted" ? "موهوب" : "مكتمل") : ((s.analysis as any)?.indicators?.type === "gifted" ? "Gifted" : "Complete")}
                       </Badge>
