@@ -130,17 +130,8 @@ const Index = () => {
     );
   };
 
-  if (error) {
-    return (
-      <DashboardLayout>
-        <div className="min-h-[50vh] flex flex-col items-center justify-center gap-3 text-center">
-          <div className="text-4xl">😕</div>
-          <p className="text-sm text-muted-foreground">{isAr ? "تعذر تحميل البيانات، حاول مجدداً" : "Couldn’t load data, please try again."}</p>
-          <Button onClick={() => window.location.reload()}>{isAr ? "إعادة المحاولة" : "Retry"}</Button>
-        </div>
-      </DashboardLayout>
-    );
-  }
+
+
 
   if (isLoading) {
     return (
