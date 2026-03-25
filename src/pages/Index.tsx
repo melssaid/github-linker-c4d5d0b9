@@ -162,7 +162,7 @@ const Index = () => {
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-3">
             <div className="relative h-12 w-12 sm:h-14 sm:w-14 rounded-2xl bg-gradient-to-tr from-orange-300 via-amber-200 to-sky-200 p-2 shadow-lg">
-              <img src={auroraLogo} alt="Kinder Aurora" className="h-full w-full object-contain" />
+              <img src={logo} alt="Kinder BH" className="h-full w-full object-contain" />
             </div>
             <div className="space-y-0.5">
               <p className="text-xs uppercase tracking-[0.2em] text-orange-500 flex items-center gap-1"><Wand2 className="h-4 w-4" /> AI Kinder</p>
