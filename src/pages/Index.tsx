@@ -30,13 +30,13 @@ import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useDashboard } from "@/features/dashboard/hooks/useDashboard";
 import { useMemo, useState, useEffect, useCallback } from "react";
-import auroraLogo from "@/assets/logo-aurora.svg";
+import logo from "@/assets/kinder-bh-logo.png";
 
 const Index = () => {
   const { t, locale } = useI18n();
   const navigate = useNavigate();
   const isAr = locale === "ar";
-  const { students, studentStatusMap, totalProgress, isLoading, error } = useDashboard();
+  const { students, studentStatusMap, totalProgress, isLoading } = useDashboard();
   const [showHint, setShowHint] = useState(false);
   const [compact, setCompact] = useState(false);
 
@@ -114,30 +114,24 @@ const Index = () => {
     if (!entries.length) return null;
     return (
       <div className="mt-2 pt-2 border-t flex gap-1 overflow-x-auto">
-        {entries.map(([key, val]) => (
-          <div key={key} className="flex items-center gap-1 bg-muted/40 px-2 py-0.5 rounded-full shrink-0">
-            <div
-              className="w-1.5 h-1.5 rounded-full"
-              style={{ backgroundColor: val >= 70 ? "hsl(var(--success))" : val >= 40 ? "hsl(var(--warning))" : "hsl(var(--destructive))" }}
-            />
-            <span className="text-[9px] text-muted-foreground">{val}%</span>
-          </div>
-        ))}
+        {entries.map(([key, val]) => {
+          const numVal = Number(val);
+          return (
+            <div key={key} className="flex items-center gap-1 bg-muted/40 px-2 py-0.5 rounded-full shrink-0">
+              <div
+                className="w-1.5 h-1.5 rounded-full"
+                style={{ backgroundColor: numVal >= 70 ? "hsl(var(--success))" : numVal >= 40 ? "hsl(var(--warning))" : "hsl(var(--destructive))" }}
+              />
+              <span className="text-[9px] text-muted-foreground">{numVal}%</span>
+            </div>
+          );
+        })}
       </div>
     );
   };
 
-  if (error) {
-    return (
-      <DashboardLayout>
-        <div className="min-h-[50vh] flex flex-col items-center justify-center gap-3 text-center">
-          <div className="text-4xl">😕</div>
-          <p className="text-sm text-muted-foreground">{isAr ? "تعذر تحميل البيانات، حاول مجدداً" : "Couldn’t load data, please try again."}</p>
-          <Button onClick={() => window.location.reload()}>{isAr ? "إعادة المحاولة" : "Retry"}</Button>
-        </div>
-      </DashboardLayout>
-    );
-  }
+
+
 
   if (isLoading) {
     return (
@@ -159,7 +153,7 @@ const Index = () => {
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-3">
             <div className="relative h-12 w-12 sm:h-14 sm:w-14 rounded-2xl bg-gradient-to-tr from-orange-300 via-amber-200 to-sky-200 p-2 shadow-lg">
-              <img src={auroraLogo} alt="Kinder Aurora" className="h-full w-full object-contain" />
+              <img src={logo} alt="Kinder BH" className="h-full w-full object-contain" />
             </div>
             <div className="space-y-0.5">
               <p className="text-xs uppercase tracking-[0.2em] text-orange-500 flex items-center gap-1"><Wand2 className="h-4 w-4" /> AI Kinder</p>
