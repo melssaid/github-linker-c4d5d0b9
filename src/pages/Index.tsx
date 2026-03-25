@@ -114,15 +114,18 @@ const Index = () => {
     if (!entries.length) return null;
     return (
       <div className="mt-2 pt-2 border-t flex gap-1 overflow-x-auto">
-        {entries.map(([key, val]) => (
-          <div key={key} className="flex items-center gap-1 bg-muted/40 px-2 py-0.5 rounded-full shrink-0">
-            <div
-              className="w-1.5 h-1.5 rounded-full"
-              style={{ backgroundColor: val >= 70 ? "hsl(var(--success))" : val >= 40 ? "hsl(var(--warning))" : "hsl(var(--destructive))" }}
-            />
-            <span className="text-[9px] text-muted-foreground">{val}%</span>
-          </div>
-        ))}
+        {entries.map(([key, val]) => {
+          const numVal = Number(val);
+          return (
+            <div key={key} className="flex items-center gap-1 bg-muted/40 px-2 py-0.5 rounded-full shrink-0">
+              <div
+                className="w-1.5 h-1.5 rounded-full"
+                style={{ backgroundColor: numVal >= 70 ? "hsl(var(--success))" : numVal >= 40 ? "hsl(var(--warning))" : "hsl(var(--destructive))" }}
+              />
+              <span className="text-[9px] text-muted-foreground">{numVal}%</span>
+            </div>
+          );
+        })}
       </div>
     );
   };
