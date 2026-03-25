@@ -30,7 +30,7 @@ import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useDashboard } from "@/features/dashboard/hooks/useDashboard";
 import { useMemo, useState, useEffect, useCallback } from "react";
-import auroraLogo from "@/assets/logo-aurora.svg";
+import logo from "@/assets/kinder-bh-logo.png";
 
 const Index = () => {
   const { t, locale } = useI18n();
