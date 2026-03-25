@@ -36,7 +36,7 @@ const Index = () => {
   const { t, locale } = useI18n();
   const navigate = useNavigate();
   const isAr = locale === "ar";
-  const { students, studentStatusMap, totalProgress, isLoading, error } = useDashboard();
+  const { students, studentStatusMap, totalProgress, isLoading } = useDashboard();
   const [showHint, setShowHint] = useState(false);
   const [compact, setCompact] = useState(false);
 
