@@ -31,7 +31,7 @@ import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useDashboard } from "@/features/dashboard/hooks/useDashboard";
 import { useMemo, useState, useEffect, useCallback } from "react";
-import auroraLogo from "@/assets/logo-aurora.svg";
+import auroraLogo from "@/assets/kinder-bh-logo.png";
 
 const Index = () => {
   const { t, locale } = useI18n();
@@ -129,15 +129,18 @@ const Index = () => {
     if (!entries.length) return null;
     return (
       <div className="mt-2 pt-2 border-t flex gap-1 overflow-x-auto">
-        {entries.map(([key, val]) => (
+        {entries.map(([key, val]) => {
+          const numericValue = typeof val === "number" ? val : Number(val) || 0;
+
+          return (
           <div key={key} className="flex items-center gap-1 bg-muted/40 px-2 py-0.5 rounded-full shrink-0">
             <div
               className="w-1.5 h-1.5 rounded-full"
-              style={{ backgroundColor: val >= 70 ? "hsl(var(--success))" : val >= 40 ? "hsl(var(--warning))" : "hsl(var(--destructive))" }}
+              style={{ backgroundColor: numericValue >= 70 ? "hsl(var(--success))" : numericValue >= 40 ? "hsl(var(--warning))" : "hsl(var(--destructive))" }}
             />
-            <span className="text-[9px] text-muted-foreground">{val}%</span>
+            <span className="text-[9px] text-muted-foreground">{numericValue}%</span>
           </div>
-        ))}
+        )})}
       </div>
     );
   };
