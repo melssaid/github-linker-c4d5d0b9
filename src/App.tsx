@@ -8,6 +8,7 @@ import { AuthProvider, useAuth } from "@/hooks/useAuth";
 import { useRole } from "@/hooks/useRole";
 import { RoleRedirect } from "@/components/layout/RoleRedirect";
 import LandingPage from "./pages/LandingPage";
+import DailyOperationsPage from "./pages/DailyOperationsPage";
 import Index from "./pages/Index";
 import StudentsPage from "./pages/StudentsPage";
 import StudentProfilePage from "./pages/StudentProfilePage";
@@ -62,6 +63,7 @@ const AppRoutes = () => (
       <Route path="/" element={<LandingPage />} />
       <Route path="/auth" element={<AuthRoute><AuthPage /></AuthRoute>} />
       <Route path="/app" element={<ProtectedRoute><RoleRedirect><Index /></RoleRedirect></ProtectedRoute>} />
+      <Route path="/daily-ops" element={<ProtectedRoute><DailyOperationsPage /></ProtectedRoute>} />
       <Route path="/students" element={<ProtectedRoute><StudentsPage /></ProtectedRoute>} />
       <Route path="/students/:studentId" element={<ProtectedRoute><StudentProfilePage /></ProtectedRoute>} />
       <Route path="/students/:studentId/assess" element={<ProtectedRoute><StudentProfilePage initialTab="assess" /></ProtectedRoute>} />
