@@ -2,39 +2,21 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import logo from "@/assets/kinder-bh-logo.png";
-import { CalendarDays, Camera, ClipboardList, Moon, Sparkles, Utensils, Users } from "lucide-react";
+import { CalendarDays, Camera, ClipboardList, Moon, Sparkles, Utensils, Users, School, ShieldCheck } from "lucide-react";
 
 const features = [
-  {
-    icon: ClipboardList,
-    title: "تقييم سريع وسهل",
-    description: "تقييم الطفل أثناء النشاط بنقرات قليلة بدل النماذج المعقدة.",
-  },
-  {
-    icon: Camera,
-    title: "توثيق فوري",
-    description: "أضف صورًا وملاحظات قصيرة بسرعة دون تعطيل وقت المعلمة.",
-  },
-  {
-    icon: Users,
-    title: "تقارير واضحة للأهل",
-    description: "ملخصات مفهومة ترفع رضا أولياء الأمور وثقتهم بالروضة.",
-  },
-  {
-    icon: CalendarDays,
-    title: "تشغيل يومي منظم",
-    description: "حضور، أنشطة، تقويم، ومتابعات يومية في مكان واحد.",
-  },
-  {
-    icon: Utensils,
-    title: "وجبات وملاحظات يومية",
-    description: "متابعة الوجبات والنوم والملاحظات بطريقة سهلة ومرتبة.",
-  },
-  {
-    icon: Moon,
-    title: "لوحة إدارية واضحة",
-    description: "مؤشرات سريعة تعجب الإدارة وتدعم القرارات التشغيلية.",
-  },
+  { icon: ClipboardList, title: "تقييم سريع وسهل", description: "تقييم الطفل أثناء النشاط بنقرات قليلة بدل النماذج المعقدة." },
+  { icon: Camera, title: "توثيق فوري", description: "أضف صورًا وملاحظات قصيرة بسرعة دون تعطيل وقت المعلمة." },
+  { icon: Users, title: "تقارير واضحة للأهل", description: "ملخصات مفهومة ترفع رضا أولياء الأمور وثقتهم بالروضة." },
+  { icon: CalendarDays, title: "تشغيل يومي منظم", description: "حضور، أنشطة، تقويم، ومتابعات يومية في مكان واحد." },
+  { icon: Utensils, title: "وجبات وملاحظات يومية", description: "متابعة الوجبات والنوم والملاحظات بطريقة سهلة ومرتبة." },
+  { icon: Moon, title: "لوحة إدارية واضحة", description: "مؤشرات سريعة تعجب الإدارة وتدعم القرارات التشغيلية." },
+];
+
+const personas = [
+  { icon: School, title: "للإدارة", description: "رؤية أوضح للأداء والتقييمات والحضور والتقارير من شاشة واحدة." },
+  { icon: Users, title: "للمعلمة", description: "تجربة أخف للتوثيق والتقييم والمتابعة اليومية دون إرباك." },
+  { icon: ShieldCheck, title: "للأسرة", description: "تقارير يومية وشهرية أوضح تعزز الثقة والرضا والاحتفاظ." },
 ];
 
 export default function LandingPage() {
@@ -90,22 +72,27 @@ export default function LandingPage() {
                 </div>
               </div>
               <div className="grid gap-4 md:grid-cols-2">
-                <Card className="rounded-3xl border-sky-100">
-                  <CardContent className="space-y-2 p-6">
-                    <div className="font-semibold">التقييم السريع</div>
-                    <div className="rounded-xl bg-slate-50 px-3 py-2 text-sm">ليان أحمد — يؤدي باستقلالية</div>
-                    <div className="rounded-xl bg-slate-50 px-3 py-2 text-sm">آدم خالد — يحتاج دعمًا بسيطًا</div>
-                  </CardContent>
-                </Card>
-                <Card className="rounded-3xl border-sky-100">
-                  <CardContent className="space-y-2 p-6">
-                    <div className="font-semibold">السجل اليومي</div>
-                    <div className="rounded-xl bg-slate-50 px-3 py-2 text-sm">الوجبات: 72 جيد / 12 متوسط</div>
-                    <div className="rounded-xl bg-slate-50 px-3 py-2 text-sm">النوم: 58 طفلًا ناموا اليوم</div>
-                  </CardContent>
-                </Card>
+                <Card className="rounded-3xl border-sky-100"><CardContent className="space-y-2 p-6"><div className="font-semibold">التقييم السريع</div><div className="rounded-xl bg-slate-50 px-3 py-2 text-sm">ليان أحمد — يؤدي باستقلالية</div><div className="rounded-xl bg-slate-50 px-3 py-2 text-sm">آدم خالد — يحتاج دعمًا بسيطًا</div></CardContent></Card>
+                <Card className="rounded-3xl border-sky-100"><CardContent className="space-y-2 p-6"><div className="font-semibold">السجل اليومي</div><div className="rounded-xl bg-slate-50 px-3 py-2 text-sm">الوجبات: 72 جيد / 12 متوسط</div><div className="rounded-xl bg-slate-50 px-3 py-2 text-sm">النوم: 58 طفلًا ناموا اليوم</div></CardContent></Card>
               </div>
             </div>
+          </div>
+        </section>
+
+        <section className="mx-auto max-w-7xl px-6 py-10">
+          <div className="grid gap-5 md:grid-cols-3">
+            {personas.map((item) => {
+              const Icon = item.icon;
+              return (
+                <Card key={item.title} className="rounded-3xl bg-white shadow-sm">
+                  <CardContent className="space-y-3 p-6">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-sky-50 text-sky-700"><Icon className="h-6 w-6" /></div>
+                    <h3 className="text-xl font-semibold">{item.title}</h3>
+                    <p className="leading-7 text-slate-600">{item.description}</p>
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
         </section>
 
@@ -120,17 +107,23 @@ export default function LandingPage() {
               return (
                 <Card key={feature.title} className="rounded-3xl border-white/80 bg-white shadow-sm">
                   <CardContent className="space-y-4 p-6">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-sky-50 text-sky-700">
-                      <Icon className="h-6 w-6" />
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-semibold">{feature.title}</h3>
-                      <p className="mt-2 leading-7 text-slate-600">{feature.description}</p>
-                    </div>
+                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-sky-50 text-sky-700"><Icon className="h-6 w-6" /></div>
+                    <div><h3 className="text-xl font-semibold">{feature.title}</h3><p className="mt-2 leading-7 text-slate-600">{feature.description}</p></div>
                   </CardContent>
                 </Card>
               );
             })}
+          </div>
+        </section>
+
+        <section className="mx-auto max-w-7xl px-6 pb-20">
+          <div className="rounded-[32px] bg-slate-900 p-10 text-white shadow-xl">
+            <h2 className="text-3xl font-bold">جاهز لتجربة أوضح وأسهل للروضة؟</h2>
+            <p className="mt-3 max-w-2xl text-slate-300">ابدأ من صفحة دخول واحدة ثم انتقل إلى تجربة تشغيل يومي تساعد الإدارة والمعلمة وولي الأمر في وقت واحد.</p>
+            <div className="mt-6 flex gap-3">
+              <Button asChild variant="secondary"><Link to="/auth">ابدأ الآن</Link></Button>
+              <Button asChild variant="outline" className="border-white bg-transparent text-white hover:bg-white hover:text-slate-900"><Link to="/auth">عرض الدخول</Link></Button>
+            </div>
           </div>
         </section>
       </main>
