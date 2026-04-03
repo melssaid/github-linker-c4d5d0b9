@@ -1,7 +1,8 @@
 {
-  "name": "vite_react_shadcn_ts",
+  "name": "github-linker",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
+  "description": "A kindergarten management platform built with React, TypeScript, and Supabase",
   "type": "module",
   "scripts": {
     "dev": "vite",
