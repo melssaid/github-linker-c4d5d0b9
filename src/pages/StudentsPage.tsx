@@ -9,7 +9,7 @@ import { useRole } from "@/hooks/useRole";
 import { supabase } from "@/integrations/supabase/client";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ClipboardList, FileText } from "lucide-react";
 
 const StudentsPage = () => {
   const { t, locale } = useI18n();
@@ -22,7 +22,6 @@ const StudentsPage = () => {
   const [students, setStudents] = useState<DbStudent[]>([]);
   const [teacherName, setTeacherName] = useState<string | null>(null);
 
-  // Admin or KG Admin can view a specific teacher's students
   const targetTeacherId = (isAdmin || isKgAdmin) ? teacherIdParam : null;
 
   useEffect(() => {
@@ -39,14 +38,12 @@ const StudentsPage = () => {
   useEffect(() => { refreshStudents(); }, [targetTeacherId]);
 
   const handleSelectStudent = (student: DbStudent | null) => {
-    if (student) {
-      navigate(`/students/${student.id}`);
-    }
+    if (student) navigate(`/students/${student.id}`);
   };
 
   return (
     <DashboardLayout>
-      <div className="p-3 sm:p-4 md:p-6 space-y-4 sm:space-y-6 max-w-4xl mx-auto">
+      <div className="p-3 sm:p-4 md:p-6 space-y-4 sm:space-y-6 max-w-4xl mx-auto" dir={isAr ? "rtl" : "ltr"}>
         {targetTeacherId && teacherName && (
           <div className="flex items-center gap-2 flex-wrap">
             <Button variant="ghost" size="sm" onClick={() => navigate(isKgAdmin ? "/kg-admin/teachers" : "/admin/teachers")} className="gap-1 text-xs">
@@ -59,11 +56,24 @@ const StudentsPage = () => {
           </div>
         )}
 
-        <PageHeader
-          title={targetTeacherId ? (isAr ? `طلاب ${teacherName || ""}` : `${teacherName || ""}'s Students`) : t("students.title")}
-          description={isAr ? "أضف طلابك واضغط على أي طالب لفتح ملفه الشامل" : "Add students and tap any student to open their full profile"}
-          tooltip={isAr ? "يمكنك إضافة حتى 30 طالباً" : "You can add up to 30 students"}
-        />
+        <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+          <PageHeader
+            title={targetTeacherId ? (isAr ? `طلاب ${teacherName || ""}` : `${teacherName || ""}'s Students`) : t("students.title")}
+            description={isAr ? "أضف طلابك واضغط على أي طالب لفتح ملفه الشامل" : "Add students and tap any student to open their full profile"}
+            tooltip={isAr ? "يمكنك إضافة حتى 30 طالباً" : "You can add up to 30 students"}
+          />
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={() => navigate("/daily-ops")} className="gap-2">
+              <ClipboardList className="h-4 w-4" />
+              {isAr ? "التشغيل اليومي" : "Daily Ops"}
+            </Button>
+            <Button onClick={() => navigate("/reports")} className="gap-2">
+              <FileText className="h-4 w-4" />
+              {isAr ? "التقارير" : "Reports"}
+            </Button>
+          </div>
+        </div>
+
         <StudentManager
           students={students}
           onStudentsChange={refreshStudents}
